@@ -11,6 +11,24 @@ ruby start.rb
 Зависимости
 ===========
 hpricot 0.6
+do_sqlite3
+dm-core
+data_mapper
+
+
+Problems
+========
+Ubuntu 8.04
+
+ERROR:  Error installing do_sqlite3:
+	ERROR: Failed to build gem native extension.
+
+/usr/bin/ruby1.8 extconf.rb install do_sqlite3
+checking for sqlite3.h... no
+*** extconf.rb failed ***
+
+Solution
+sudo apt-get install libsqlite3-dev
 
 Идеи развития
 =============
