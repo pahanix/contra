@@ -16,8 +16,8 @@ dm-core
 data_mapper
 
 
-Problems
-========
+Troubleshooting
+==============
 Ubuntu 8.04
 
 ERROR:  Error installing do_sqlite3:
