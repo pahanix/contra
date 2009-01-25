@@ -10,4 +10,8 @@ class Unit
   property :updated_at,   DateTime
   
   default_scope(:default).update(:order => [:updated_at.desc])
+  
+  def self.find_or_create(options)
+    self.first(options) || self.new(options)
+  end
 end

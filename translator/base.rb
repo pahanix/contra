@@ -5,6 +5,8 @@ require 'iconv'
 
 module Translator
   class Base
+    attr_reader :url
+    
     CHARSET = /<meta HTTP-EQUIV="Content-Type" CONTENT="text\/html; charset=([-\w\d]+)">/im unless defined? CHARSET
 
     # @params
@@ -36,6 +38,10 @@ module Translator
       req = Net::HTTP::Get.new(uri.path + '?' + uri.query)
       res = Net::HTTP.start(uri.host, uri.port) { |http| http.request(req) }
       extract Iconv.iconv(@default_charset, charset(res.body), res.body).to_s
+    end
+
+    def host
+      URI.parse(@url % 'apple').host rescue @url
     end
 
     def separator
