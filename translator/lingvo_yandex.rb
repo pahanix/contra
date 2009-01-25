@@ -16,6 +16,10 @@ class LingvoYandex < Translator::Base
   def to_s
     "Lingvo.Yandex"
   end
+
+  def type
+    'lingvo_yandex'
+  end
   
   private 
   

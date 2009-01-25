@@ -50,4 +50,8 @@ class Multitran < Translator::Base
   def to_s
     "Multitran"
   end
+
+  def type
+    'multitran'
+  end
 end

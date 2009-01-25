@@ -45,5 +45,9 @@ module Translator
     def to_s
       "Base Translator"
     end
+
+    def type
+      'base'
+    end
   end
 end
