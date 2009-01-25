@@ -15,12 +15,12 @@ module Translator
 
     def self.run
       raise "Console should have a translation provider. Please configure console with #{self}.config { |config| ... }" unless provider
-      begin
+      loop do
         ($stdout << prompt).flush
         unit = gets.strip # strip removes "\n" at the end of the unit
         break if terminal?(unit)
         $stdout << (command?(unit) ? execute(unit) : translate(unit))
-      end while true
+      end
     end
 
     def self.translate(phrase)
