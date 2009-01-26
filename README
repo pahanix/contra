@@ -4,6 +4,12 @@ Console Translator (Консольный переводчик)
 Переводит слово или фразу через Яндекс.Lingvo или Мультитран в зависисмости от настроек
 Направление перевода Eng -> Rus
 
+Установка
+=========
+Для запуска необходимы ruby и rubygems
+
+sudo gem install hpricot do_sqlite3 dm-core data_mapper
+
 Запуск 
 ======
 ruby dictionary
@@ -13,7 +19,8 @@ ruby dictionary
 
 Зависимости
 ===========
-hpricot 0.6
+rubygems
+hpricot
 do_sqlite3
 dm-core
 data_mapper
