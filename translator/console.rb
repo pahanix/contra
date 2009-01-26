@@ -19,7 +19,7 @@ module Translator
         ($stdout << prompt).flush
         unit = gets.strip # strip removes "\n" at the end of the unit
         break if terminal?(unit)
-        $stdout << (command?(unit) ? execute(unit) : translate(unit))
+        $stdout << execute(unit)
       end
     end
 
@@ -41,8 +41,12 @@ module Translator
       unit[0..0] == ":"
     end
     
-    def self.execute(command)
-      "EXECUTED COMMAND #{command}"
+    def self.execute(unit)
+      if command?(unit)
+        "EXECUTED COMMAND #{command}"
+      else
+        translate(unit)
+      end
     end
   end
 end
