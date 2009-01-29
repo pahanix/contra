@@ -52,6 +52,7 @@ sudo apt-get install libsqlite3-dev
 * Добавить Google Translate (для перевода куска текста?)
 * Автоопределение языка
 * Вынести настройки в .yml
+* использовать HAML для отчетов
 
 History
 =======

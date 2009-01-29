@@ -1,12 +1,9 @@
 module Translator
   class Console  
-    # cattr_accessor
-    @@provider = nil unless defined? @@provider
-    def self.provider; @@provider; end
-    def self.provider=(provider); @@provider = provider; end
+    cattr_accessor :provider
 
     def self.prompt
-      "\n\n#{@@provider} >> "
+      "\n\n#{provider} >> "
     end
   
     def self.config
@@ -38,7 +35,7 @@ module Translator
     end
     
     def self.terminal?(unit)
-      [":stop", ":exit", ":quit", ":term"].include?(unit.downcase)
+      unit.downcase.in? [":stop", ":exit", ":quit", ":term"]
     end
     
     def self.command?(unit)

@@ -1,4 +1,5 @@
 require 'rubygems'
+# require 'extlib' # included in dm-core''
 require 'dm-core'
 require 'dm-validations'
 require 'dm-timestamps'
