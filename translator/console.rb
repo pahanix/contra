@@ -13,7 +13,7 @@ module Translator
     def self.init
       raise "Console should have a translation provider. Please configure console with #{self}.config { |config| ... }" unless provider
       History.new
-      Readline.completion_proc = lambda { |unit| Unit.all(:phrase.like => "#{unit}%").map{|u| u.phrase} }
+      Readline.completion_proc = lambda { |unit| Unit.all(:phrase.like => "#{unit}%").map{|u| u.phrase}.uniq.sort }
     end
 
     def self.run
