@@ -15,7 +15,7 @@ module Translator
       History.new
       
       # we remove space from word break chars because it should complete entire phrase
-      Readline.basic_word_break_characters = Readline.basic_word_break_characters.delete(" ")
+      Readline.basic_word_break_characters.delete!(" ")
       
       Readline.completion_proc = Proc.new do |unit| 
         unit.strip!
