@@ -13,7 +13,15 @@ module Translator
     def self.init
       raise "Console should have a translation provider. Please configure console with #{self}.config { |config| ... }" unless provider
       History.new
-      Readline.completion_proc = lambda { |unit| Unit.all(:phrase.like => "#{unit}%").map{|u| u.phrase}.uniq.sort }
+      
+      # we remove space from word break chars because it should complete entire phrase
+      Readline.basic_word_break_characters = Readline.basic_word_break_characters.delete(" ")
+      
+      Readline.completion_proc = Proc.new do |unit| 
+        unit.strip!
+        completions = Unit.all(:phrase.like => "#{unit}%").map{|u| u.phrase}.uniq.sort
+        completions[0] == unit ? nil : completions
+      end
     end
 
     def self.run
@@ -26,7 +34,7 @@ module Translator
     end
 
     def self.translate(phrase)
-      unit = Unit.find_or_create(:phrase => phrase, :provider => provider.type)
+      unit = Unit.find_or_create(:phrase => phrase.strip, :provider => provider.type)
       unit.translation ||= provider.translate(phrase)
       unit.count +=1
       unit.save
