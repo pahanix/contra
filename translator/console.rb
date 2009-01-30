@@ -3,7 +3,7 @@ module Translator
     cattr_accessor :provider
 
     def self.prompt
-      "\n\n#{provider} >> "
+      "\nEnter q for exit\n#{provider} >> "
     end
   
     def self.config
@@ -44,7 +44,7 @@ module Translator
     end
     
     def self.terminal?(unit)
-      unit.downcase.in? [":stop", ":exit", ":quit", ":term"]
+      unit.downcase.in? ["q", ":stop", ":exit", ":quit", ":term"]
     end
     
     def self.command?(unit)
