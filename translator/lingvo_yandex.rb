@@ -10,7 +10,7 @@ class LingvoYandex < Translator::Base
     to    = Regexp.escape('<iframe id="dataFrame" src="about:blank"></iframe>')
     body = html.match(/#{from}(.*)#{to}/m)[1] rescue ''
     h = Hpricot(body)
-    h.search("p").map{|p| clear(p) }.join("\n")
+    h.search("p").map{|p| clear(p) }[0..-2].join("\n")
   end
   
   def to_s
