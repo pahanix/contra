@@ -2,7 +2,8 @@
 require 'boot'
 
 Translator::Console.config do |config|
-  config.provider = LingvoYandex.new
+  config.word = LingvoYandex.new
+  config.phrase = Multitran.new
 end
 
 Translator::Console.run

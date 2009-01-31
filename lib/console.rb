@@ -1,9 +1,13 @@
 module Translator
   class Console  
-    cattr_accessor :provider
+    cattr_accessor :word, :phrase
+
+    def self.welcome
+      File.open('welcome', 'r'){ |file| file.read }
+    end
 
     def self.prompt
-      "\nEnter q for exit\n#{provider} >> "
+      "Contra (q for quit) >> "
     end
   
     def self.config
@@ -11,11 +15,12 @@ module Translator
     end
 
     def self.init
-      raise "Console should have a translation provider. Please configure console with #{self}.config { |config| ... }" unless provider
+      # raise "Console should have a translation provider. Please configure console with #{self}.config { |config| ... }" unless provider
       History.new
       
       # we remove space from word break chars because it should complete entire phrase
-      Readline.basic_word_break_characters.delete!(" ")
+      Readline.basic_word_break_characters = Readline.basic_word_break_characters.delete(" ")
+      # Readline.basic_word_break_characters.delete!(" ") doesn't work!
       
       Readline.completion_proc = Proc.new do |unit| 
         unit.strip!
@@ -26,19 +31,29 @@ module Translator
 
     def self.run
       init
+      puts welcome
       loop do
         unit = Readline::readline(prompt, true)
+        next  if unit.blank?
         break if terminal?(unit)
         puts execute(unit)
       end
     end
 
-    def self.translate(phrase)
-      unit = Unit.find_or_create(:phrase => phrase.strip, :provider => provider.type)
-      unit.translation ||= provider.translate(phrase)
+    def self.translate(line)
+      line.strip!
+      return "" if line.blank?
+      
+      # define mode of translation words for Lingvo, phrase for Multitran
+      provider = (line !~ / / ? word : phrase)
+      
+      unit = Unit.find_or_create(:phrase => line.strip, :provider => "#{provider}")
+      unit.translation ||= provider.translate(line)
+      return "" if unit.translation.blank?
       unit.count +=1
       unit.save
-      unit.translation
+      
+      [" ", "#{provider}: #{line}", " ", unit.translation, " "].join("\n")
     rescue SocketError => e
       "Cannot connect to the host #{provider.host}\n"
     end
