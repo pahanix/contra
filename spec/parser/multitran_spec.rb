@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-
+require 'digest/sha1'
 include Utils # for method load_from_file
 
 describe Multitran do
@@ -18,6 +18,7 @@ describe Multitran do
     end
   end
   
+  
   describe "#parse" do
     it "should parse multitran.html as expected result" do
       html = @parser.convert_to_default_charset load_from_file('multitran.html')
@@ -25,7 +26,9 @@ describe Multitran do
       expected = load_from_file('multitran.expected')
       result = @parser.parse(html)
       # save_to_file(result, "multitran.result")
-      result.should == expected
+
+      # spaces don't matter
+      result.gsub(/\s+/, '').should == expected.gsub(/\s+/, '')
     end
     
     it "should parse multitran2.html as expected result" do
@@ -34,7 +37,9 @@ describe Multitran do
       expected = load_from_file('multitran2.expected')
       result = @parser.parse(html)
       # save_to_file(result, "multitran2.result")
-      result.should == expected
+      
+      # spaces don't matter
+      result.gsub(/\s+/, '').should == expected.gsub(/\s+/, '')
     end
     
   end
