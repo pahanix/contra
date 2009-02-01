@@ -29,7 +29,7 @@ class Multitran < Parser::Base
         output << separator        
       end
     end
-    output.join("\n")
+    output.map{ |line| puts line; line.strip }.join("\n")
   end
   
   def to_s

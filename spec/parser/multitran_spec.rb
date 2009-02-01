@@ -8,7 +8,7 @@ describe Multitran do
     @parser = Multitran.new
   end
   
-  describe "initialization" do
+  describe "#initialize" do
     it "should be kind of Parser::Base" do
       @parser.should be_kind_of(Parser::Base)
     end

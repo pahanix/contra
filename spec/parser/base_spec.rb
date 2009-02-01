@@ -4,7 +4,7 @@ module Parser
 
   describe Base do
     
-    describe "initialization" do
+    describe "#initialize" do
       it "should be instance of Parser::Base" do
         Base.new.should be_instance_of(Parser::Base)
       end
@@ -60,6 +60,13 @@ module Parser
         @parser.detect_charset(html).should == 'windows-1251'
         @parser.detect_encoding(html).should == 'windows-1251'
       end
+
+      it "should be case insensate" do
+        html = '<html><head><META http-eQuIv="conTEnt-Type" CONTENT="TExt/html; charset=windows-1251"></head></html>'
+        @parser.detect_charset(html).should == 'windows-1251'
+        @parser.detect_encoding(html).should == 'windows-1251'
+      end
+
       
       it "should detect encoding as utf-8" do
         html = '<html><head><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8"></head></html>'
@@ -86,7 +93,7 @@ module Parser
     
     
     describe "#convert_to_default_charset" do
-      it "should return blank string whe input is blank" do
+      it "should return blank string when input is blank" do
         Base.new.convert_to_default_charset(nil).should == ""
         Base.new.convert_to_default_charset("").should == ""
       end
