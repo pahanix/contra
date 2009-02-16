@@ -4,21 +4,19 @@ Console Translator (Консольный переводчик)
 Переводит слово или фразу через Яндекс.Lingvo или Мультитран в зависисмости от настроек
 Направление перевода Eng -> Rus
 
-Установка
-=========
-Для запуска необходимы ruby и rubygems
+== Установка
 
+Для запуска необходимы ruby и rubygems
 sudo gem install hpricot do_sqlite3 dm-core data_mapper
 
-Запуск 
-======
+== Запуск 
+
 ruby dictionary
 
 Или как исполняемый файл
 ./dictionary 
 
-Зависимости
-===========
+== Зависимости
 rubygems
 hpricot
 do_sqlite3
@@ -26,8 +24,12 @@ dm-core
 data_mapper
 readline
 
-Troubleshooting
-==============
+== Тесты
+
+запускаем autospec
+
+== Troubleshooting
+
 Ubuntu 8.04
 
 ERROR:  Error installing do_sqlite3:
@@ -40,8 +42,8 @@ checking for sqlite3.h... no
 Solution
 sudo apt-get install libsqlite3-dev
 
-Идеи развития
-=============
+== Идеи развития
+
 * Собирать статистику по словам и хранить перевод в базе (DataMapper, Sqlite)
 * Составлять словарик
 * Автодополнение и история запросов (?) 
@@ -54,8 +56,18 @@ sudo apt-get install libsqlite3-dev
 * Вынести настройки в .yml
 * использовать HAML для отчетов
 
-History
-=======
+== History
+
+Версия 0.1.7
+* отрефакторен и почищен код
+* все зависимости (require) вынесены в boot.rb
+* добавлен класс конфига Translator::Config
+* добавлены spec.opts (чтобы autospec запускался цветным)
+* дополнение фраз вынесена в отдельный метод (completion_proc)
+* написаны спеки для console.rb
+* пофикшен потенциальный баг в определении слова или фразы, если строка начинается с пробела
+* пофикшен баг с дополнением, если слово полностью совпало, но другие варианты еще есть
+* вместо net/http используется open-uri (исчезли методы detect_charset и http_request_body для Parser::Base)
 
 Версия 0.1.6
 * слова автоматически переводятся в Яндекс.Лингво, а фразы в Мультитране

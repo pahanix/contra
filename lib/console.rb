@@ -1,77 +1,71 @@
 module Translator
   class Console  
-    cattr_accessor :word, :phrase
+    cattr_accessor :word, :phrase, :prompt
 
     def self.welcome
-      File.open('welcome', 'r'){ |file| file.read }
-    end
-
-    def self.prompt
-      "Contra (q for quit) >> "
-    end
-  
-    def self.config
-      yield self
+      File.read('welcome')
     end
 
     def self.init
-      # raise "Console should have a translation provider. Please configure console with #{self}.config { |config| ... }" unless provider
       History.new
       
-      # we remove space from word break chars because it should complete entire phrase
-      Readline.basic_word_break_characters = Readline.basic_word_break_characters.delete(" ")
-      # Readline.basic_word_break_characters.delete!(" ") doesn't work!
-      
-      Readline.completion_proc = Proc.new do |unit| 
-        unit.strip!
-        completions = Unit.all(:phrase.like => "#{unit}%").map{|u| u.phrase}.uniq.sort
-        completions[0] == unit ? nil : completions
-      end
-    end
+      Readline.basic_word_break_characters = Config::BREAK_CHARS
+      Readline.completion_proc = self.completion_proc
 
+      self.word    = Config::WORD_PROVIDER
+      self.phrase  = Config::PHRASE_PROVIDER      
+      self.prompt  = Config::PROMPT
+    end
+    
     def self.run
       init
-      puts welcome
+      $stdout.puts welcome
       loop do
         unit = Readline::readline(prompt, true)
         next  if unit.blank?
         break if terminal?(unit)
-        puts execute(unit)
+        translation = translate(unit)
+        $stdout.puts(translation) unless translation.blank?
       end
     end
 
     def self.translate(line)
+      return if line.blank?
+
       line.strip!
-      return "" if line.blank?
+      provider = detect_provider(line)
       
-      # define mode of translation words for Lingvo, phrase for Multitran
-      provider = (line !~ / / ? word : phrase)
-      
-      unit = Unit.find_or_create(:phrase => line.strip, :provider => "#{provider}")
+      unit = Unit.find_or_create(:phrase => line, :provider => "#{provider}")
       unit.translation ||= provider.translate(line)
-      return "" if unit.translation.blank?
+
+      return if unit.translation.blank?
+
       unit.count +=1
       unit.save
       
-      [" ", "#{provider}: #{line}", " ", unit.translation, " "].join("\n")
+      format_output % [provider, line, unit.translation]
+      
     rescue SocketError => e
       "Cannot connect to the host #{provider.host}\n"
     end
     
-    def self.terminal?(unit)
-      unit.downcase.in? ["q", ":stop", ":exit", ":quit", ":term"]
+    def self.format_output
+      [" ", "%s: %s", " ", "%s", " "].join("\n")
     end
     
-    def self.command?(unit)
-      unit[0..0] == ":"
-    end
-    
-    def self.execute(unit)
-      if command?(unit)
-        "EXECUTED COMMAND #{unit}"
-      else
-        translate(unit)
+    def self.completion_proc
+      Proc.new do |unit| 
+        completions = Unit.all(:phrase.like => "#{unit.lstrip}%").map{|u| u.phrase}.uniq.sort
+        completions.first == unit && completions.size == 1 ? nil : completions
       end
+    end
+      
+    def self.detect_provider(line)
+      line.strip !~ / / ? word : phrase
+    end
+    
+    def self.terminal?(unit)
+      unit.downcase.in? ["q", "stop", "exit", "quit"]
     end
   end
 end

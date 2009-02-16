@@ -1,4 +1,3 @@
-require 'readline'
 #
 # Some ideas and snippents for Readline::HISTORY are taken from Wirble gem 0.1.2
 #

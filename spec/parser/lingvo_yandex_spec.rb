@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-include Utils # for method load_from_file
-
 describe LingvoYandex do
   
   before(:each) do
@@ -20,8 +18,8 @@ describe LingvoYandex do
   
   describe "#parse" do
     it "should parse html as expected result" do
-      html      = load_from_file('lingvo_yandex.html')
-      expected  = load_from_file('lingvo_yandex.expected')
+      html      = read_asset_file('lingvo_yandex.html')
+      expected  = read_asset_file('lingvo_yandex.expected')
       @parser.parse(html).should == expected
     end
   end

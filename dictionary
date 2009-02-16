@@ -1,9 +1,4 @@
 #!/usr/bin/env ruby
 require 'boot'
 
-Translator::Console.config do |config|
-  config.word = LingvoYandex.new
-  config.phrase = Multitran.new
-end
-
 Translator::Console.run

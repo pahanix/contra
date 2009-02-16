@@ -50,64 +50,16 @@ module Parser
     
     
     
-    describe "#detect_charset" do
-      before(:each) do
-        @parser = Base.new("localhost?text=%s", "utf-8")
-      end
-      
-      it "should detect encoding as windows-1251" do
-        html = '<html><head><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251"></head></html>'
-        @parser.detect_charset(html).should == 'windows-1251'
-        @parser.detect_encoding(html).should == 'windows-1251'
-      end
-
-      it "should be case insensate" do
-        html = '<html><head><META http-eQuIv="conTEnt-Type" CONTENT="TExt/html; charset=windows-1251"></head></html>'
-        @parser.detect_charset(html).should == 'windows-1251'
-        @parser.detect_encoding(html).should == 'windows-1251'
-      end
-
-      
-      it "should detect encoding as utf-8" do
-        html = '<html><head><meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8"></head></html>'
-        @parser.detect_charset(html).should == 'utf-8'
-        @parser.detect_encoding(html).should == 'utf-8'
-      end
-
-      it "should detect encoding as utf-8 (default) for unknown encoding" do
-        html = '<html><head></head></html>'
-        @parser.detect_charset(html).should == 'utf-8'
-        @parser.detect_encoding(html).should == 'utf-8'
-      end
-    end
-    
-    
-    
-    describe "#http_request_body" do
-      it "should raise URI::InvalidURIError for invalid url" do
-        @parser = Base.new
-        lambda { @parser.http_request_body("invalid url") }.should raise_error(URI::InvalidURIError)
-      end
-    end
-
-    
-    
-    describe "#convert_to_default_charset" do
-      it "should return blank string when input is blank" do
-        Base.new.convert_to_default_charset(nil).should == ""
-        Base.new.convert_to_default_charset("").should == ""
-      end
-    end
-    
-    
-
     describe "#translate & #parse" do
       before(:each) do
         @parser = Base.new
+        
+        @html = StringIO.new("<html><body>translation</body></html>")
+        @html.stub!(:charset).and_return('utf-8')
       end
       
       it "should parse received html" do
-        @parser.should_receive(:http_request_body).and_return("<html><body>translation</body></html>")
+        @parser.should_receive(:open).and_return(@html)
         @parser.translate("word").should == "translation"
       end
       
