@@ -8,12 +8,15 @@ require 'hpricot'
 require 'open-uri'
 require 'iconv'
 
-DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/db/dictionary.sqlite3")
-DataObjects::Sqlite3.logger = DataObjects::Logger.new('log/dictionary.log', :debug) # :off, :fatal, :error, :warn, :info, :debug
+ROOT = File.dirname(File.expand_path(__FILE__))
 
-Dir["#{Dir.pwd}/{translator,lib,models}/**/*.rb"].each { |f| require f }
+DataMapper.setup(:default, "sqlite3://#{ROOT}/db/dictionary.sqlite3")
+DataObjects::Sqlite3.logger = DataObjects::Logger.new("#{ROOT}/log/dictionary.log", :debug) # :off, :fatal, :error, :warn, :info, :debug
 
-require 'config'
+Dir["#{ROOT}/{translator,lib,models}/**/*.rb"].each { |f| require f }
+
+# Load config after all stuff is loaded
+require "#{ROOT}/config"
 
 # DataMapper.auto_migrate!
 DataMapper.auto_upgrade!
