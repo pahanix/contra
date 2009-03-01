@@ -1,0 +1,9 @@
+%xhtml
+  %head
+    %title= @title
+  %body
+    %a{ :href => '/' } ALPHA
+    %a{ :href => '/top' } TOP
+    %a{ :href => '/last' } LAST
+    #container
+      = yield

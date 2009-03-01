@@ -1,0 +1,5 @@
+%ul
+  - @units.to_a.each do |u|
+    %li
+      %a{:href => "/translate/#{u.phrase}" }= u.phrase
+      = "(#{u.count})"
